@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.btn-coustom {
+  @apply px-8 duration-200 py-2 bg-[#FF3811] border-transparent border hover:border-white hover:bg-transparent text-white rounded-md;
+}
