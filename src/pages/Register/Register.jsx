@@ -4,22 +4,42 @@ import google from '../../assets/images/login/download.png';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../AuthProvaider/AuthProvaider';
+import { updateProfile } from 'firebase/auth';
 import toast from 'react-hot-toast';
-const Login = () => {
-  const { loginUser } = useContext(AuthContext);
-  const handlerLogin = e => {
+
+const Register = () => {
+  const { googlesignIn, createUser } = useContext(AuthContext);
+
+  const handlerRegister = e => {
     e.preventDefault();
     const form = e.target;
-
+    const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
 
-    loginUser(email, password)
+    createUser(email, password)
       .then(result => {
         const loggedUser = result.user;
-        console.log(loggedUser);
-        toast.success('Sign In Success!');
+        updateUser(loggedUser, name);
+        toast.success('Registation success');
         form.reset();
+      })
+      .catch(er => console.log(er.message));
+  };
+
+  const updateUser = (user, name) => {
+    updateProfile(user, {
+      displayName: name,
+    })
+      .then(() => {})
+      .catch(er => console.log(er.message));
+  };
+  const handlerGoogleLogin = () => {
+    googlesignIn()
+      .then(result => {
+        const loogedUser = result.user;
+        console.log(loogedUser);
+        toast.success('Registation success');
       })
       .catch(er => console.log(er.message));
   };
@@ -30,8 +50,20 @@ const Login = () => {
           <img className="w-full lg:w-10/12" src={img} alt="" />
         </div>
         <div className="card space-y-5 border-2 shrink-0 w-full max-w-sm shadow-xl bg-base-100">
-          <h3 className="text-center text-3xl font-bold">Sign In</h3>
-          <form onSubmit={handlerLogin} className=" pb-0 card-body ">
+          <h3 className="text-center text-3xl font-bold">Sign Up</h3>
+          <form onSubmit={handlerRegister} className=" pb-0 card-body ">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="name"
+                name="name"
+                className="input input-bordered"
+                required
+              />
+            </div>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -58,11 +90,11 @@ const Login = () => {
             </div>
             <div className="form-control mt-6">
               <button className="btn-coustom hover:text-black hover:border-slate-300">
-                Sign In
+                Sign UP
               </button>
             </div>
           </form>
-          <p className="text-center  label-text">Or Sign in With</p>
+          <p className="text-center  label-text">Or Sign Up With</p>
           <div className="flex justify-center gap-5 items-center">
             <button className="p-3 bg-slate-100 text-blue-900 rounded-full">
               <FaFacebook></FaFacebook>
@@ -70,14 +102,17 @@ const Login = () => {
             <button className="p-3 bg-slate-100 text-blue-500 rounded-full">
               <FaLinkedin></FaLinkedin>
             </button>
-            <button className="p-3 bg-slate-100 text-white rounded-full">
+            <button
+              onClick={handlerGoogleLogin}
+              className="p-3 bg-slate-100 text-white rounded-full"
+            >
               <img className="w-5 h-5 rounded-full" src={google} alt="" />
             </button>
           </div>
           <p className="text-center pb-5 label-text">
-            Do not have any account?{' '}
-            <Link className="text-[#FF3811]" to="/register">
-              Sign Up
+            Already have an account?{' '}
+            <Link className="text-[#FF3811]" to="/login">
+              Sign In
             </Link>
           </p>
         </div>
@@ -86,4 +121,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

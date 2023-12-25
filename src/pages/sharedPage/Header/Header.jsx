@@ -36,11 +36,12 @@ const Header = () => {
             <li>
               <Link to="/service">Services</Link>
             </li>
-            <li>
-              <Link to="/blog">Blog</Link>
-            </li>
+
             <li>
               <Link to="/contuct">Contact</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
             </li>
           </ul>
         </div>
@@ -59,11 +60,12 @@ const Header = () => {
           <li>
             <Link to="/service">Services</Link>
           </li>
-          <li>
-            <Link to="/blog">Blog</Link>
-          </li>
+
           <li>
             <Link to="/contuct">Contact</Link>
+          </li>
+          <li>
+            <Link to="/login">Login</Link>
           </li>
         </ul>
       </div>
