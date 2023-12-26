@@ -1,7 +1,5 @@
-import React from 'react';
-
-const OrderReviewCart = ({ book, handlerDelete }) => {
-  const { _id, email, productName, date, img, price } = book;
+const OrderReviewCart = ({ book, handlerDelete, handlerUpdate }) => {
+  const { _id, email, productName, date, img, price, status } = book;
   return (
     <tr>
       <th>
@@ -41,7 +39,21 @@ const OrderReviewCart = ({ book, handlerDelete }) => {
       <td>{email}</td>
       <td>{date && date}</td>
       <th>
-        <button className="btn-coustom hover:bg-[#FF3811]">Pending</button>
+        {status ? (
+          <button className="btn btn-outline btn-info">Approved</button>
+        ) : (
+          <div className="flex gap-3">
+            <button className="btn btn-outline cursor-default  btn-error">
+              Pending
+            </button>
+            <button
+              onClick={() => handlerUpdate(_id)}
+              className="btn btn-secondary"
+            >
+              Please Approve
+            </button>
+          </div>
+        )}
       </th>
     </tr>
   );

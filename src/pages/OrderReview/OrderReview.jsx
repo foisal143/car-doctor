@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import baner from '../../assets/images/banner/4.jpg';
-import { useLoaderData } from 'react-router-dom';
 import OrderReviewCart from './OrderReviewCart';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
@@ -43,6 +42,28 @@ const OrderReview = () => {
       }
     });
   };
+
+  const handlerUpdate = id => {
+    console.log(id);
+    fetch(`http://localhost:5000/booked/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ status: true }),
+    })
+      .then(data => {
+        console.log(data);
+        if (data.status === 200) {
+          const remaing = booked.filter(b => b._id !== id);
+          const updated = booked.find(b => b._id === id);
+          const newData = [updated, ...remaing];
+          console.log(newData);
+          setBooked(newData);
+        }
+      })
+      .catch(er => console.log(er.message));
+  };
   return (
     <div className="my-12">
       <div className="relative overflow-hidden">
@@ -78,6 +99,7 @@ const OrderReview = () => {
                     handlerDelete={handlerDelete}
                     key={book._id}
                     book={book}
+                    handlerUpdate={handlerUpdate}
                   ></OrderReviewCart>
                 ))
               ) : (

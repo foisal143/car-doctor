@@ -25,6 +25,7 @@ const Checkout = () => {
       message,
       img,
       price,
+      status: false,
     };
     fetch('http://localhost:5000/booked', {
       method: 'POST',
