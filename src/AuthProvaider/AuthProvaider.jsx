@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
 } from 'firebase/auth';
 import app from '../firebase/firebase';
 export const AuthContext = createContext(null);
@@ -30,6 +31,10 @@ const AuthProvaider = ({ children }) => {
     setUser(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
+
+  const logout = () => {
+    return signOut(auth);
+  };
   // observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
@@ -45,6 +50,7 @@ const AuthProvaider = ({ children }) => {
     loading,
     createUser,
     loginUser,
+    logout,
   };
   return (
     <AuthContext.Provider value={authIno}>{children}</AuthContext.Provider>

@@ -1,11 +1,11 @@
-import { useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 import baner from '../../assets/images/banner/4.jpg';
 import logo from '../../assets/logo.svg';
 import FacilityCart from './FacilityCart';
 import { FaArrowRight } from 'react-icons/fa';
 const ServicesDetails = () => {
   const service = useLoaderData();
-  const { img, title, price, description, facility } = service;
+  const { _id, img, title, price, description, facility } = service;
   return (
     <div className="my-12">
       <div className="relative overflow-hidden">
@@ -95,10 +95,12 @@ const ServicesDetails = () => {
             </div>
           </div>
           <div className="space-y-5">
-            <h3 className="text-5xl font-bold">Price ${price}</h3>
-            <button className="btn-coustom w-full hover:bg-black">
-              Proceed Checkout
-            </button>
+            <h3 className="text-5xl mb-5 font-bold">Price ${price}</h3>
+            <Link to={`/checkout/${_id}`}>
+              <button className="btn-coustom w-full hover:bg-black">
+                Proceed Checkout
+              </button>
+            </Link>
           </div>
         </div>
       </div>

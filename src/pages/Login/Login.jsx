@@ -6,7 +6,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../AuthProvaider/AuthProvaider';
 import toast from 'react-hot-toast';
 const Login = () => {
-  const { loginUser } = useContext(AuthContext);
+  const { loginUser, googlesignIn } = useContext(AuthContext);
   const handlerLogin = e => {
     e.preventDefault();
     const form = e.target;
@@ -20,6 +20,15 @@ const Login = () => {
         console.log(loggedUser);
         toast.success('Sign In Success!');
         form.reset();
+      })
+      .catch(er => console.log(er.message));
+  };
+
+  const handlerGoogleLogin = () => {
+    googlesignIn()
+      .then(res => {
+        const users = res.user;
+        console.log(users);
       })
       .catch(er => console.log(er.message));
   };
@@ -70,7 +79,10 @@ const Login = () => {
             <button className="p-3 bg-slate-100 text-blue-500 rounded-full">
               <FaLinkedin></FaLinkedin>
             </button>
-            <button className="p-3 bg-slate-100 text-white rounded-full">
+            <button
+              onClick={handlerGoogleLogin}
+              className="p-3 bg-slate-100 text-white rounded-full"
+            >
               <img className="w-5 h-5 rounded-full" src={google} alt="" />
             </button>
           </div>

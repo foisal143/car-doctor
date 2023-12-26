@@ -2,7 +2,17 @@ import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
 import { MdOutlineShoppingBag } from 'react-icons/md';
 import { FaSearch } from 'react-icons/fa';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../../../AuthProvaider/AuthProvaider';
 const Header = () => {
+  const [open, setOpen] = useState(false);
+  const { user, logout } = useContext(AuthContext);
+
+  const handlerLogout = () => {
+    logout()
+      .then(() => {})
+      .catch(er => console.log(er.message));
+  };
   return (
     <nav className="navbar  h-20 bg-base-100">
       <div className="navbar-start">
@@ -34,7 +44,7 @@ const Header = () => {
               <Link to="/about">About</Link>
             </li>
             <li>
-              <Link to="/service">Services</Link>
+              <Link to="/order">Order Review</Link>
             </li>
 
             <li>
@@ -58,7 +68,7 @@ const Header = () => {
             <Link to="/about">About</Link>
           </li>
           <li>
-            <Link to="/service">Services</Link>
+            <Link to="/order">Order Review</Link>
           </li>
 
           <li>
@@ -75,9 +85,24 @@ const Header = () => {
             <MdOutlineShoppingBag></MdOutlineShoppingBag>
           </button>
         </Link>
-        <button className="text-xl">
-          <FaSearch></FaSearch>
-        </button>
+        {user?.email && (
+          <div className="flex relative gap-3 items-center">
+            <h3
+              onClick={() => setOpen(!open)}
+              className="p-3 bg-[#FF3811] rounded-full cursor-pointer text-white"
+            >
+              {user?.displayName}
+            </h3>
+            <button
+              onClick={handlerLogout}
+              className={`btn-coustom absolute -bottom-12 -right-5 hover:bg-black ${
+                open ? 'block' : 'hidden'
+              }`}
+            >
+              Logout
+            </button>
+          </div>
+        )}
         <button className="btn btn-outline btn-secondary">Appointment</button>
       </div>
     </nav>
