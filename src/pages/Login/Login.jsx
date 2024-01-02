@@ -5,8 +5,10 @@ import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../AuthProvaider/AuthProvaider';
 import toast from 'react-hot-toast';
+import accessToken from '../../utilities/utilities';
 const Login = () => {
   const { loginUser, googlesignIn } = useContext(AuthContext);
+
   const handlerLogin = e => {
     e.preventDefault();
     const form = e.target;
@@ -17,9 +19,10 @@ const Login = () => {
     loginUser(email, password)
       .then(result => {
         const loggedUser = result.user;
-        console.log(loggedUser);
+        const email = loggedUser.email;
         toast.success('Sign In Success!');
         form.reset();
+        accessToken(email);
       })
       .catch(er => console.log(er.message));
   };
@@ -27,8 +30,10 @@ const Login = () => {
   const handlerGoogleLogin = () => {
     googlesignIn()
       .then(res => {
-        const users = res.user;
-        console.log(users);
+        const loggedUser = res.user;
+        const email = loggedUser.email;
+
+        accessToken(email);
       })
       .catch(er => console.log(er.message));
   };

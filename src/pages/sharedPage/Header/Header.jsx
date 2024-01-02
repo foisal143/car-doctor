@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
 import { MdOutlineShoppingBag } from 'react-icons/md';
-import { FaSearch } from 'react-icons/fa';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../../AuthProvaider/AuthProvaider';
 const Header = () => {
@@ -10,7 +9,9 @@ const Header = () => {
 
   const handlerLogout = () => {
     logout()
-      .then(() => {})
+      .then(() => {
+        localStorage.removeItem('access-token');
+      })
       .catch(er => console.log(er.message));
   };
   return (

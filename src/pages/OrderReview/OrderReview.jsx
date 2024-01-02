@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import baner from '../../assets/images/banner/4.jpg';
 import OrderReviewCart from './OrderReviewCart';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
@@ -6,13 +7,11 @@ import 'sweetalert2/src/sweetalert2.scss';
 import { AuthContext } from '../../AuthProvaider/AuthProvaider';
 
 const OrderReview = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [booked, setBooked] = useState([]);
-  useEffect(() => {
-    fetch(`http://localhost:5000/booked?email=${user?.email}`)
-      .then(res => res.json())
-      .then(data => setBooked(data));
-  }, [booked]);
+  const [control, setControl] = useState(false);
+  const url = `http://localhost:5000/booked?email=${user?.email}`;
+  const eccessToken = localStorage.getItem('access-token');
 
   const handlerDelete = id => {
     Swal.fire({
@@ -25,7 +24,10 @@ const OrderReview = () => {
       confirmButtonText: 'Yes, delete it!',
     }).then(result => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/booked/${id}`, { method: 'DELETE' })
+        fetch(`http://localhost:5000/booked/${id}`, {
+          method: 'DELETE',
+        })
+          .then(res => res.json())
           .then(data => {
             if (data.deletedCount > 0) {
               Swal.fire({
@@ -34,14 +36,35 @@ const OrderReview = () => {
                 icon: 'success',
               });
               const remaing = booked.filter(b => b._id !== id);
-
               setBooked(remaing);
+              setControl(!control);
             }
           })
           .catch(er => console.log(er.message));
       }
     });
   };
+
+  useEffect(() => {
+    const loadData = async () => {
+      const loadedData = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${eccessToken}`,
+        },
+      });
+
+      const data = await loadedData.json();
+      if (!data.error) {
+        setBooked(data);
+      } else {
+        logout()
+          .then()
+          .catch(er => console.log(er.message));
+      }
+    };
+    loadData();
+  }, [url, logout, eccessToken, control]);
 
   const handlerUpdate = id => {
     console.log(id);
@@ -52,14 +75,15 @@ const OrderReview = () => {
       },
       body: JSON.stringify({ status: true }),
     })
+      .then(res => res.json())
       .then(data => {
         console.log(data);
-        if (data.status === 200) {
+        if (data.modifiedCount > 0) {
           const remaing = booked.filter(b => b._id !== id);
           const updated = booked.find(b => b._id === id);
           const newData = [updated, ...remaing];
-          console.log(newData);
           setBooked(newData);
+          setControl(!control);
         }
       })
       .catch(er => console.log(er.message));
